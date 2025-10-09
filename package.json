@@ -1,6 +1,19 @@
-"scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "predeploy": "vite build",
-  "deploy": "gh-pages -d dist"
+{
+  "name": "poster-pos-platform-boilerplate",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "predeploy": "vite build",
+    "deploy": "gh-pages -d dist"
+  },
+  "dependencies": {
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0"
+  },
+  "devDependencies": {
+    "vite": "^5.2.9",
+    "gh-pages": "^5.0.0",
+    "@vitejs/plugin-react": "^4.2.1"
+  }
 }
