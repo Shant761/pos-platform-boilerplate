@@ -1,49 +1,46 @@
-import './styles.css';
-import React from 'react';
+class ExampleApp extends React.Component {
+    lastTransactions = []; // Хранит последние 5 транзакций
+    popupId = null; // Сохраняем ID открытого popup
 
+    componentDidMount() {
+        Poster.events.on("transaction.closed", (transaction) => {
+            // Добавляем новую транзакцию в массив
+            this.lastTransactions.unshift(transaction);
+            if (this.lastTransactions.length > 5) this.lastTransactions.pop();
 
-export default class HelloWorldApp extends React.Component {
-    constructor(props) {
-        super(props);
+            // Формируем HTML с последними 5 транзакциями
+            const content = `
+                <h2>Последние транзакции</h2>
+                ${this.lastTransactions.map((tx, i) => `
+                    <div style="margin-bottom: 10px; padding:5px; border-bottom:1px solid #ccc;">
+                        <strong>Транзакция ${i + 1}:</strong>
+                        <pre style="white-space: pre-wrap; word-wrap: break-word;">${JSON.stringify(tx, null, 2)}</pre>
+                    </div>
+                `).join('')}
+            `;
 
-        this.state = {
-            emoji: '',
-            message: '',
-        };
-
-        // Показываем кнопки приложения в окне настроек и заказа
-        Poster.interface.showApplicationIconAt({
-            functions: 'Кнопка платформы',
-            order: 'Кнопка платформы',
-            payment: 'My Button',
-        });
-
-        // Подписываемся на клик по кнопке
-        Poster.on('applicationIconClicked', (data) => {
-            if (data.place === 'order') {
-                this.setState({ emoji: '👩‍🍳', message: 'Вы открыли окно заказа!' });
+            // Если popup ещё не открыт, создаём новый
+            if (!this.popupId) {
+                this.popupId = Poster.interface.popup({
+                    width: 500,
+                    height: 400,
+                    title: 'Последние транзакции',
+                    url: 'data:text/html,' + encodeURIComponent(content)
+                });
             } else {
-                this.setState({ emoji: '💵', message: 'Checkout modal!' });
+                // Если popup уже открыт, обновляем его содержимое
+                Poster.interface.updatePopup(this.popupId, {
+                    url: 'data:text/html,' + encodeURIComponent(content)
+                });
             }
-            // Показываем интерфейс
-            Poster.interface.popup({ width: 500, height: 400, title: 'My app' });
-        });
-
-        // Подписываемся на ивент закрытия заказа
-        Poster.on('afterOrderClose', () => {
-            this.setState({ emoji: '🍾', message: 'Вы только что закрыли заказ, ура!' });
-            // Показываем интерфейс
-            Poster.interface.popup({ width: 500, height: 400, title: 'Мое приложение' });
         });
     }
 
     render() {
-        const { emoji, message } = this.state;
-
         return (
-            <div className="hello-world">
-                <h1>{emoji}</h1>
-                <p>{message}</p>
+            <div style={{ padding: 20, textAlign: "center" }}>
+                <h3>Тест события Poster</h3>
+                <p>Закрывай транзакции — popup будет обновляться и показывать последние 5.</p>
             </div>
         );
     }
