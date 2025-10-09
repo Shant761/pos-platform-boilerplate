@@ -14,7 +14,7 @@ class App extends React.Component {
           transactions: [transaction, ...prev.transactions].slice(0, 5),
         }),
         () => {
-          // Показываем popup с последними 5 транзакциями
+          // Формируем HTML для popup
           const htmlContent = `
             <h2>Последние 5 транзакций</h2>
             ${this.state.transactions
@@ -29,6 +29,7 @@ class App extends React.Component {
               .join("")}
           `;
 
+          // Показываем popup
           Poster.interface.popup({
             width: 500,
             height: 400,
@@ -38,7 +39,7 @@ class App extends React.Component {
         }
       );
 
-      // Для теста можно также выводить в консоль
+      // Также можно выводить в консоль для отладки
       console.log("Закрыта транзакция:", transaction);
     });
   }
@@ -58,4 +59,5 @@ class App extends React.Component {
   }
 }
 
+// Рендерим React-приложение
 ReactDOM.render(<App />, document.getElementById("app-container"));
