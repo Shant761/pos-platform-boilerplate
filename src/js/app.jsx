@@ -8,7 +8,7 @@ class ExampleApp extends React.Component {
     componentDidMount() {
         // Подписка на событие закрытия транзакции
         Poster.events.on("transaction.closed", (transaction) => {
-            // Добавляем новую транзакцию
+            // Добавляем😂 новую транзакцию
             this.lastTransactions.unshift(transaction);
             if (this.lastTransactions.length > 5) this.lastTransactions.pop();
 
